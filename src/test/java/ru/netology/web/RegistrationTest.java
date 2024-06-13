@@ -212,6 +212,24 @@ public class RegistrationTest {
         $("[data-test-id='date'] .input__sub")
                 .shouldBe(Condition.visible, Duration.ofSeconds(15))
                 .shouldHave(Condition.exactText("Заказ на выбранную дату невозможен"));
-
     }
+
+    @Test
+    void shouldTestNoCorrectPhone() {
+        open("http://localhost:9999");
+
+        $("[data-test-id='city'] input").setValue("Казань");
+        String planDate = selectionDate(4, "dd.MM.yyyy");
+
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id='date'] input").setValue(planDate);
+        $("[data-test-id='name'] input").setValue("Петров Иван");
+        $("[data-test-id='phone'] input").setValue("+79000000000000");
+        $("[data-test-id='agreement']").click();
+        $("button.button").click();
+        $("[data-test-id='phone'] .input__sub")
+                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldHave(Condition.exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+    }
+
 }
